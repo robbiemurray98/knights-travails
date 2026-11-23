@@ -111,6 +111,17 @@ class Node{
 
 // you dont need to create a node for each edge
 
+function isOnBoard(vertex){
+    const x = vertex[0]
+    const y = vertex[1]
+
+    if(x <= 7 && y <= 7 && x >= 0 && y >= 0){
+        return true
+    } else {
+        return false
+    }
+}
+
 function helper(vertex){
     const x = vertex[0]
     const y = vertex[1]
@@ -157,6 +168,13 @@ function helper(vertex){
 
 
 function searchGraph(start, target){
+
+    if(isOnBoard(start) === false){
+        return new Error('Start must be within a 7x7 grid.')
+    } else if(isOnBoard(target) === false){
+        return new Error('Target must be within a 7x7 grid.')
+    }
+
     const visited = []
 
     const path = []
@@ -170,10 +188,6 @@ function searchGraph(start, target){
             return
         }
 
-        // queue.push([4, 3])
-
-        console.log(queue)
-
         const givenNode = queue.shift()
 
         const givenVertex = givenNode.vertex
@@ -185,22 +199,8 @@ function searchGraph(start, target){
 
         let isVisited = visited.some((e) => x === e[0] && y === e[1])
 
-        // visited.forEach((e) => {
-        //     if(x === e[0] && y === e[1]){
-
-        //     }
-        // } )
-
-
-        // const possibleMoves = helper(givenVertex)
-        // possibleMoves.forEach((e) => queue.push(e))
-
-
-
-
         if(x === targetX && y === targetY){
-            console.log('found target')
-            let current = givenVertex
+            let current = givenNode
             while(current != null){
                 path.unshift(current.vertex)
                 current = current.parent
@@ -212,7 +212,7 @@ function searchGraph(start, target){
                 const possibleMoves = helper(givenVertex)
                 possibleMoves.forEach((e) => {
                     const node = new Node(e)
-                    node.parent = givenVertex
+                    node.parent = givenNode
                     queue.push(node)
             })
                 // create parent node add paren pointer to e
@@ -223,14 +223,20 @@ function searchGraph(start, target){
         }
     }
 
-    findTarget(startNode)
-    return path
+    findTarget([startNode])
+
+    console.log(`You made it in ${path.length} moves! Here's your path:`)
+    path.forEach((e) => {
+        console.log(e)
+    })
+
+    return 
 
 }
 
 
-
-searchGraph([0, 0], [4, 3])
+searchGraph([5, 6], [0, 3])
+// searchGraph([0, 0], [4, 3])
 
 // console.log(helper([0, 0]))
 
